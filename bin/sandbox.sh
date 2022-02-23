@@ -104,6 +104,12 @@ if Rails.env.development? && defined?(Bullet)
 end
 RUBY
 
+touch config/initializers/devise.rb
+cat <<RUBY >> config/initializers/devise.rb
+Devise.secret_key = "9bd64c5e4841772765bd93bc479ecb68ec96cbbedb4283f6478776fbb3ee72f96d2fc90df4c64c49770da65cb6ded13a4edd"
+RUBY
+
+
 bundle install --gemfile Gemfile
 
 bin/rails javascript:install:esbuild
