@@ -3,18 +3,7 @@
 
 set -e
 
-case "$DB" in
-mysql)
-  RAILSDB="mysql"
-  ;;
-postgres|'')
-  RAILSDB="postgresql"
-  ;;
-*)
-  echo "Invalid DB specified: $DB"
-  exit 1
-  ;;
-esac
+RAILSDB="mysql"
 
 rm -rf ./sandbox
 bundle exec rails new sandbox --database="$RAILSDB" \
@@ -35,17 +24,17 @@ fi
 
 cd ./sandbox
 
-if [ "$SPREE_AUTH_DEVISE_PATH" != "" ]; then
-  SPREE_AUTH_DEVISE_GEM="gem 'spree_auth_devise', path: '$SPREE_AUTH_DEVISE_PATH'"
-else
-  SPREE_AUTH_DEVISE_GEM="gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: 'main'"
-fi
+#if [ "$SPREE_AUTH_DEVISE_PATH" != "" ]; then
+  #SPREE_AUTH_DEVISE_GEM="gem 'spree_auth_devise', path: '$SPREE_AUTH_DEVISE_PATH'"
+#else
+  ##SPREE_AUTH_DEVISE_GEM="gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: 'main'"
+#fi
 
-if [ "$SPREE_GATEWAY_PATH" != "" ]; then
-  SPREE_GATEWAY_GEM="gem 'spree_gateway', path: '$SPREE_GATEWAY_PATH'"
-else
-  SPREE_GATEWAY_GEM="gem 'spree_gateway', github: 'spree/spree_gateway', branch: 'main'"
-fi
+#if [ "$SPREE_GATEWAY_PATH" != "" ]; then
+  #SPREE_GATEWAY_GEM="gem 'spree_gateway', path: '$SPREE_GATEWAY_PATH'"
+#else
+  #SPREE_GATEWAY_GEM="gem 'spree_gateway', github: 'spree/spree_gateway', branch: 'main'"
+#fi
 
 if [ "$SPREE_DASHBOARD_PATH" != "" ]; then
   SPREE_BACKEND_GEM="gem 'spree_backend', path: '$SPREE_DASHBOARD_PATH'"
@@ -58,8 +47,8 @@ gem 'spree', path: '..'
 gem 'spree_emails', path: '../emails'
 gem 'spree_sample', path: '../sample'
 $SPREE_BACKEND_GEM
-$SPREE_AUTH_DEVISE_GEM
-$SPREE_GATEWAY_GEM
+#$SPREE_AUTH_DEVISE_GEM
+#$SPREE_GATEWAY_GEM
 gem 'spree_i18n', github: 'spree-contrib/spree_i18n', branch: 'main'
 
 group :test, :development do
@@ -104,11 +93,10 @@ if Rails.env.development? && defined?(Bullet)
 end
 RUBY
 
-touch config/initializers/devise.rb
-cat <<RUBY >> config/initializers/devise.rb
-Devise.secret_key = "9bd64c5e4841772765bd93bc479ecb68ec96cbbedb4283f6478776fbb3ee72f96d2fc90df4c64c49770da65cb6ded13a4edd"
-RUBY
-
+#touch config/initializers/devise.rb
+#cat <<RUBY >> config/initializers/devise.rb
+##Devise.secret_key = "9bd64c5e4841772765bd93bc479ecb68ec96cbbedb4283f6478776fbb3ee72f96d2fc90df4c64c49770da65cb6ded13a4edd"
+#RUBY
 
 bundle install --gemfile Gemfile
 
@@ -118,8 +106,8 @@ yarn install
 
 bin/rails db:drop || true
 bin/rails db:create
-bin/rails g spree:install --auto-accept --user_class=Spree::User --sample=true
+bin/rails g spree:install --auto-accept --user_class=Spree::LegacyUser --sample=true
 bin/rails g spree:backend:install
 bin/rails g spree:emails:install
-bin/rails g spree:auth:install
-bin/rails g spree_gateway:install
+#bin/rails g spree:auth:install
+#bin/rails g spree_gateway:install
